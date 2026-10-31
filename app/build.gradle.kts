@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
@@ -5,6 +7,32 @@ plugins {
     id("com.google.devtools.ksp")
     id("org.jetbrains.kotlin.plugin.compose") version "2.2.0"
 }
+
+// CI passes the key through environment variables, a local build reads ~/.config/buckwheat-plus/keystore.properties.
+// Without either one release builds fall back to the debug key, so anyone can still build the project.
+val releaseSigning: Map<String, String>? = run {
+    val fromEnv = System.getenv("KEYSTORE_FILE")?.let { file ->
+        mapOf(
+            "storeFile" to file,
+            "storePassword" to System.getenv("KEYSTORE_PASSWORD").orEmpty(),
+            "keyAlias" to System.getenv("KEY_ALIAS").orEmpty(),
+            "keyPassword" to System.getenv("KEY_PASSWORD").orEmpty(),
+        )
+    }
+
+    fromEnv ?: File(System.getProperty("user.home"), ".config/buckwheat-plus/keystore.properties")
+        .takeIf { it.exists() }
+        ?.let { file ->
+            val properties = Properties().apply { file.inputStream().use { load(it) } }
+            properties.stringPropertyNames().associateWith { properties.getProperty(it) }
+        }
+}
+
+// Commit count keeps every newer build, local or CI, installable as an update
+val commitCount: Int = providers.exec {
+    commandLine("git", "rev-list", "--count", "HEAD")
+    isIgnoreExitValue = true
+}.standardOutput.asText.get().trim().toIntOrNull() ?: 29
 
 android {
     compileSdk = 36
@@ -14,14 +42,25 @@ android {
         applicationId = "com.gauthamp10.buckwheatplus"
         minSdk = 29
         targetSdk = 36
-        versionCode = 29
-        versionName = "4.8.0-plus.1"
+        versionCode = commitCount
+        versionName = System.getenv("VERSION_NAME") ?: "4.8.0-plus.1"
         testInstrumentationRunner = "com.danilkinkin.buckwheat.CustomTestRunner"
     }
 
     ksp {
         arg("room.schemaLocation", "$projectDir/schemas")
         arg("dagger.hilt.disableModulesHaveInstallInCheck", "true")
+    }
+
+    signingConfigs {
+        releaseSigning?.let { signing ->
+            create("release") {
+                storeFile = file(signing.getValue("storeFile"))
+                storePassword = signing.getValue("storePassword")
+                keyAlias = signing.getValue("keyAlias")
+                keyPassword = signing.getValue("keyPassword")
+            }
+        }
     }
 
     buildTypes {
@@ -32,7 +71,7 @@ android {
         getByName("release") {
             isMinifyEnabled = true
             isShrinkResources = true
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.findByName("release") ?: signingConfigs.getByName("debug")
 
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),

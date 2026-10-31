@@ -59,12 +59,19 @@ and the full path from a posted notification to the budget being reduced.
 
 ## Building
 
-Requirements: JDK 17, Android SDK 36, Gradle 8.14.
+Every push to `master` is tested and built by [GitHub Actions](https://github.com/gauthamp10/buckwheat-plus/actions):
+the signed APK is attached to each run. Pushing a tag like `v4.8.0-plus.2` also publishes it as a
+[release](https://github.com/gauthamp10/buckwheat-plus/releases).
+
+To build locally you need JDK 17 and the Android SDK 36:
 
 ```bash
-gradle :app:assembleRelease      # app/build/outputs/apk/release/app-release.apk
-gradle :app:testDebugUnitTest    # run the tests
+./gradlew :app:assembleRelease      # app/build/outputs/apk/release/app-release.apk
+./gradlew :app:testDebugUnitTest    # run the tests
 ```
+
+Release builds are signed with the Buckwheat+ key from the `KEYSTORE_*` secrets in CI, or from
+`~/.config/buckwheat-plus/keystore.properties` locally. Without either, they are signed with the debug key.
 
 Buckwheat+ uses its own application id, `com.gauthamp10.buckwheatplus`, so it installs next to the original Buckwheat.
 Data is not shared between the two.
