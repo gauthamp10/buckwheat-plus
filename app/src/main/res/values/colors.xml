@@ -3,4 +3,8 @@
     <color name="primary">#000</color>
     <color name="surface">#fff</color>
     <color name="onSurface">#000</color>
+    <color name="notification_budget_left">#2EB872</color>
+    <color name="notification_budget_spent">#F59E0B</color>
+    <color name="notification_budget_total">#3D7BF7</color>
+    <color name="notification_budget_over">#EF4444</color>
 </resources>

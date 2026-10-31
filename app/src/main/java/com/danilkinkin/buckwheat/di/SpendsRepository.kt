@@ -432,8 +432,8 @@ class SpendsRepository @Inject constructor(
         return nextDailyBudget
     }
 
-    suspend fun addSpent(newTransaction: Transaction) {
-        this.transactionDao.insert(newTransaction)
+    suspend fun addSpent(newTransaction: Transaction): Int {
+        val uid = this.transactionDao.insertAndGetId(newTransaction).toInt()
 
         context.budgetDataStore.edit {
             try {
@@ -478,6 +478,8 @@ class SpendsRepository @Inject constructor(
                 context.errorForReport = e.stackTraceToString()
             }
         }
+
+        return uid
     }
 
     suspend fun removeSpent(transactionForRemove: Transaction) {

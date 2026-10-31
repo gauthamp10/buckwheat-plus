@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="app_name">Buckwheat</string>
+  <string name="app_name">Buckwheat+</string>
   <string name="app_widget_extend_name">Buckwheat extend</string>
   <string name="app_widget_minimal_name">Buckwheat minimal</string>
   <string name="rest_budget_for_today">For today</string>
@@ -62,7 +62,9 @@
   <string name="description">Buckwheat is an app that helps you spend money wisely. Writing down each spending sobers the mind and gives you an idea of how much and how you can spend.</string>
   <string name="report_bug">Report a bug</string>
   <string name="contribute">Contribute</string>
-  <string name="developer">Development &amp; design:</string>
+  <string name="developer">Original app, development &amp; design:</string>
+  <string name="fork_developer">Buckwheat+ fork:</string>
+  <string name="fork_description">Buckwheat+ is an unofficial fork of Buckwheat that adds automatic spend import from bank, Wallet and SMS notifications, spends by card and a live budget notification. It is not affiliated with the original author</string>
   <string name="report_bug_title">Report a bug</string>
   <string name="report_via_github">Via GitHub issue</string>
   <string name="report_via_email">Via email</string>
@@ -143,4 +145,51 @@
   <string name="confirm_finish_budget_title">Finish budget</string>
   <string name="confirm_finish_budget_description">Your current budget will be completed, and you will no longer be able to make any further expenses</string>
   <string name="confirm_finish_budget">Finish budget</string>
+  <string name="auto_import_label">Auto-import card spends</string>
+  <string name="auto_import_on">On</string>
+  <string name="auto_import_off">Off</string>
+  <string name="auto_import_enable">Track spends automatically</string>
+  <string name="auto_import_enable_description">Card spends from bank SMS, bank app notifications and Google Wallet are deducted from the budget. On the first run, today\'s spends are picked up too. The same spend reported by several sources is counted once</string>
+  <string name="auto_import_notification_access">Notification access</string>
+  <string name="auto_import_notification_access_description">Needed for Google Wallet and bank apps. Spends are tracked the moment they happen</string>
+  <string name="budget_notification_label">Budget in notifications</string>
+  <string name="budget_notification_channel">Daily budget</string>
+  <string name="budget_notification_channel_description">Always shows how much is left for today</string>
+  <string name="budget_notification_left_today">%1$s left for today</string>
+  <string name="budget_notification_spent_of">Spent %1$s of %2$s · %3$s left in total</string>
+  <string name="budget_notification_over_today">Today\'s budget is over by %1$s</string>
+  <string name="budget_notification_rest_of_period">%1$s left in total, the daily budget will be recalculated</string>
+  <string name="budget_notification_new_day">A new day has started</string>
+  <string name="budget_notification_new_day_description">Tap to see today\'s budget</string>
+  <string name="budget_notification_period_finished">Budget period is over</string>
+  <string name="budget_notification_period_finished_description">Tap to see the results and start a new one</string>
+  <string name="budget_notification_set_budget">Tap to set up a budget</string>
+  <string name="budget_notification_left_label">left today</string>
+  <string name="budget_notification_over_label">over today</string>
+  <string name="budget_notification_spent_label">spent today</string>
+  <string name="budget_notification_total_label">left in total</string>
+  <string name="budget_notification_footer">Daily budget %1$s · %2$s left</string>
+  <string name="auto_import_background">Work in background</string>
+  <string name="auto_import_background_description">Lets Android keep reading Wallet and bank app notifications while Buckwheat is closed. Reading is cheap: only notifications with an amount in them are looked at. On Xiaomi, Huawei, Oppo, Vivo or Samsung, tap here once more after allowing, then turn on autostart and keep Buckwheat out of sleeping apps</string>
+  <string name="auto_import_sms_access">SMS access</string>
+  <string name="auto_import_sms_access_description">Needed to find today\'s spends from bank SMS that arrived before the feature was turned on</string>
+  <string name="auto_import_access_granted">Allowed</string>
+  <string name="auto_import_access_grant">Allow</string>
+  <string name="auto_import_sync_now">Check for new spends</string>
+  <string name="auto_import_syncing">Checking…</string>
+  <string name="auto_import_sync_summary">Added: %1$d, duplicates: %2$d, waiting for new day: %3$d, skipped: %4$d</string>
+  <string name="auto_import_privacy">Messages are read only on this device and never leave it. Spends in another currency, or outside of the budget period, are skipped</string>
+  <string name="card_spends_title">Spends by card</string>
+  <string name="card_spends_description">Spends of the current budget period. The card is taken from the bank, SMS or Wallet notification the spend was read from</string>
+  <string name="card_spends_empty">No spends in this budget period yet</string>
+  <string name="card_spends_card">Card •••• %1$s</string>
+  <string name="card_spends_no_card">Without card</string>
+  <string name="card_spends_source_manual">Entered by hand or no card in the message</string>
+  <string name="card_spends_source_sms">SMS</string>
+  <string name="card_spends_source_app">Notification</string>
+  <string name="card_spends_no_comment">Spend</string>
+  <plurals name="card_spends_count">
+    <item quantity="one">%1$d spend</item>
+    <item quantity="other">%1$d spends</item>
+  </plurals>
 </resources>

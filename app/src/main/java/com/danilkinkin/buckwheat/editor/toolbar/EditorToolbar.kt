@@ -18,10 +18,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.danilkinkin.buckwheat.R
 import com.danilkinkin.buckwheat.base.BigIconButton
+import com.danilkinkin.buckwheat.cards.CARD_SPENDS_SHEET
 import com.danilkinkin.buckwheat.data.AppViewModel
 import com.danilkinkin.buckwheat.data.PathState
 import com.danilkinkin.buckwheat.data.SpendsViewModel
@@ -88,6 +90,13 @@ fun EditorToolbar(
             RestBudgetPill()
         }
         Spacer(modifier = Modifier.width(4.dp))
+        BigIconButton(
+            icon = painterResource(R.drawable.ic_credit_card),
+            contentDescription = stringResource(R.string.card_spends_title),
+            onClick = {
+                appViewModel.openSheet(PathState(CARD_SPENDS_SHEET))
+            },
+        )
         BigIconButton(
             icon = painterResource(R.drawable.ic_settings),
             contentDescription = null,

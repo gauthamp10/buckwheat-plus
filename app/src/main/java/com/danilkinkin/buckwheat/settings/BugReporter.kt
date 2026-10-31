@@ -81,7 +81,7 @@ fun BugReporter(onClose: () -> Unit = {}) {
                     onClick = {
                         openInBrowser(
                             context,
-                            "https://github.com/danilkinkin/buckwheat/issues",
+                            "$PROJECT_URL/issues",
                         )
                         onClose()
                     },
@@ -96,8 +96,8 @@ fun BugReporter(onClose: () -> Unit = {}) {
                     onClick = {
                         sendEmail(
                             context,
-                            arrayOf("hello@danilkinkin.com"),
-                            "Buckwheat bug report",
+                            emptyArray(),
+                            "Buckwheat+ bug report",
                             """
     
     

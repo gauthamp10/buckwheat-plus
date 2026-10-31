@@ -33,4 +33,8 @@ object AppModule {
     @Singleton
     @Provides
     fun provideStorageDao(db: DatabaseModule) = db.storageDao()
+
+    @Singleton
+    @Provides
+    fun provideDetectedSpendDao(db: DatabaseModule) = db.detectedSpendDao()
 }

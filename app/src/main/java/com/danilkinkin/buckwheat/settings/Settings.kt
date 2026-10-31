@@ -1,6 +1,7 @@
 package com.danilkinkin.buckwheat.settings
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.activity.result.ActivityResultRegistryOwner
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,7 +27,10 @@ import com.danilkinkin.buckwheat.ui.BuckwheatTheme
 const val SETTINGS_SHEET = "settings"
 
 @Composable
-fun Settings(onTriedWidget: () -> Unit = {}) {
+fun Settings(
+    activityResultRegistryOwner: ActivityResultRegistryOwner? = null,
+    onTriedWidget: () -> Unit = {},
+) {
     val localBottomSheetScrollState = LocalBottomSheetScrollState.current
 
     val navigationBarHeight = androidx.compose.ui.unit.max(
@@ -54,6 +58,8 @@ fun Settings(onTriedWidget: () -> Unit = {}) {
             ) {
                 ThemeSwitcher()
                 LangSwitcher()
+                AutoImport()
+                BudgetNotification(activityResultRegistryOwner)
                 TryWidget(onTried = {
                     onTriedWidget()
                 })

@@ -6,12 +6,16 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.danilkinkin.buckwheat.autoImport.AutoImportRepository
 import com.danilkinkin.buckwheat.data.entities.Transaction
 import com.danilkinkin.buckwheat.di.SpendsRepository
+import com.danilkinkin.buckwheat.util.DAY
 import com.danilkinkin.buckwheat.util.countDaysToToday
 import com.danilkinkin.buckwheat.util.isToday
+import com.danilkinkin.buckwheat.util.roundToDay
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
@@ -24,6 +28,7 @@ enum class RestedBudgetDistributionMethod { REST, ADD_TODAY, ASK }
 class SpendsViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val spendsRepository: SpendsRepository,
+    private val autoImportRepository: AutoImportRepository,
 ) : ViewModel() {
     var tags = spendsRepository.getAllTags()
     var transactions = spendsRepository.getAllTransactions()
@@ -50,6 +55,7 @@ class SpendsViewModel @Inject constructor(
     init {
         runChangeDayAction()
         runScheduledDetectChangeDayTask()
+        runAutoImport()
     }
 
     // Budget handling
@@ -217,12 +223,28 @@ class SpendsViewModel @Inject constructor(
         }
     }
 
+    private fun runAutoImport() {
+        viewModelScope.launch {
+            autoImportRepository.syncAll()
+        }
+
+        viewModelScope.launch {
+            spendsRepository.getLastChangeDailyBudgetDate().distinctUntilChanged().collect { lastChangeDailyBudgetDate ->
+                if (lastChangeDailyBudgetDate !== null && isToday(lastChangeDailyBudgetDate)) {
+                    autoImportRepository.importPending()
+                }
+            }
+        }
+    }
+
     private fun runScheduledDetectChangeDayTask() {
         var currentDay = Date()
 
         viewModelScope.launch {
             while (true) {
-                delay(5000L)
+                // Capped so manual clock or time zone changes are still noticed within a minute
+                val untilNextDay = roundToDay(Date()).time + DAY - Date().time
+                delay(untilNextDay.coerceIn(1000L, 60_000L))
 
                 if (isToday(currentDay)) continue
 

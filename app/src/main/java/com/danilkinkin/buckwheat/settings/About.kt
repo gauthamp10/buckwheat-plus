@@ -23,6 +23,58 @@ import com.danilkinkin.buckwheat.data.PathState
 import com.danilkinkin.buckwheat.ui.BuckwheatTheme
 import com.danilkinkin.buckwheat.util.openInBrowser
 
+const val PROJECT_URL = "https://github.com/gauthamp10/buckwheat-plus"
+
+@Composable
+private fun ProfileLink(
+    label: String,
+    handle: String,
+    url: String,
+    contentColor: androidx.compose.ui.graphics.Color,
+) {
+    val context = LocalContext.current
+
+    val annotatedString = buildAnnotatedString {
+        withStyle(style = SpanStyle(color = contentColor)) {
+            append("$label ")
+        }
+
+        pushStringAnnotation(tag = "profile", annotation = url)
+        withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.primary)) {
+            append("$handle ")
+        }
+
+        appendInlineContent("openInBrowser")
+
+        pop()
+    }
+
+    ClickableText(
+        text = annotatedString,
+        inlineContent = mapOf(
+            "openInBrowser" to InlineTextContent(
+                Placeholder(
+                    MaterialTheme.typography.bodyLarge.fontSize,
+                    MaterialTheme.typography.bodyLarge.fontSize,
+                    PlaceholderVerticalAlign.TextCenter,
+                )
+            ) {
+                Icon(
+                    tint = MaterialTheme.colorScheme.primary,
+                    painter = painterResource(R.drawable.ic_open_in_browser_small),
+                    contentDescription = null,
+                )
+            }
+        ),
+        style = MaterialTheme.typography.bodyLarge,
+        onClick = { offset ->
+            annotatedString.getStringAnnotations(tag = "profile", start = offset, end = offset)
+                .firstOrNull()
+                ?.let { openInBrowser(context, it.item) }
+        },
+    )
+}
+
 @Composable
 fun About(
     modifier: Modifier = Modifier,
@@ -48,58 +100,23 @@ fun About(
                 style = MaterialTheme.typography.bodyMedium,
             )
             Spacer(modifier = Modifier.height(8.dp))
-
-            val annotatedString = buildAnnotatedString {
-                withStyle(style = SpanStyle(color = contentColor)) {
-                    append("${stringResource(R.string.developer)} ")
-                }
-
-                pushStringAnnotation(
-                    tag = "developer",
-                    annotation = "https://danilkinkin.com",
-                )
-                withStyle(
-                    style = SpanStyle(color = MaterialTheme.colorScheme.primary)
-                ) {
-                    append("@danilkinkin ")
-                }
-
-                appendInlineContent("openInBrowser")
-
-                pop()
-            }
-
-            ClickableText(
-                text = annotatedString,
-                inlineContent = mapOf(
-                    "openInBrowser" to InlineTextContent(
-                        Placeholder(
-                            MaterialTheme.typography.bodyLarge.fontSize,
-                            MaterialTheme.typography.bodyLarge.fontSize,
-                            PlaceholderVerticalAlign.TextCenter,
-                        )
-                    ) {
-                        Icon(
-                            tint = MaterialTheme.colorScheme.primary,
-                            painter = painterResource(R.drawable.ic_open_in_browser_small),
-                            contentDescription = null,
-                        )
-                    }
-                ),
-                style = MaterialTheme.typography.bodyLarge,
-                onClick = { offset ->
-                    annotatedString.getStringAnnotations(
-                        tag = "developer",
-                        start = offset,
-                        end = offset,
-                    ).firstOrNull()?.let {
-                        openInBrowser(
-                            context,
-                            "https://danilkinkin.com",
-                        )
-                    }
-
-                },
+            Text(
+                text = stringResource(R.string.fork_description),
+                style = MaterialTheme.typography.bodyMedium,
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            ProfileLink(
+                label = stringResource(R.string.developer),
+                handle = "@danilkinkin",
+                url = "https://danilkinkin.com",
+                contentColor = contentColor,
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            ProfileLink(
+                label = stringResource(R.string.fork_developer),
+                handle = "@gauthamp10",
+                url = PROJECT_URL,
+                contentColor = contentColor,
             )
             Spacer(modifier = Modifier.height(24.dp))
             DescriptionButton(

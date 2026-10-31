@@ -35,8 +35,9 @@ fun CatchAndSendCrashReport(
             if (snackbarResult == SnackbarResult.ActionPerformed) {
                 sendEmail(
                     context,
-                    arrayOf("hello@danilkinkin.com"),
-                    "Buckwheat bug report",
+                    // Buckwheat+ is a fork, its crashes must not land in the original author's inbox
+                    emptyArray(),
+                    "Buckwheat+ bug report",
                     """
     
     

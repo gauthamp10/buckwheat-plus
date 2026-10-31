@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.danilkinkin.buckwheat.data.entities.Transaction
 import com.danilkinkin.buckwheat.data.entities.TransactionType
+import java.util.Date
 
 @Dao
 interface TransactionDao {
@@ -16,8 +17,14 @@ interface TransactionDao {
     @Query("SELECT * FROM transactions WHERE uid = :uid")
     fun getById(uid: Int): Transaction?
 
+    @Query("SELECT * FROM transactions WHERE type = :type AND date BETWEEN :from AND :to ORDER BY date ASC")
+    fun getBetween(type: TransactionType, from: Date, to: Date): List<Transaction>
+
     @Insert
     fun insert(vararg transaction: Transaction)
+
+    @Insert
+    fun insertAndGetId(transaction: Transaction): Long
 
     @Update(entity = Transaction::class, onConflict = OnConflictStrategy.REPLACE)
     fun update(vararg transaction: Transaction)

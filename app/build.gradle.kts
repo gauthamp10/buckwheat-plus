@@ -10,11 +10,12 @@ android {
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.danilkinkin.buckwheat"
+        // Own id so Buckwheat+ installs next to the original Buckwheat
+        applicationId = "com.gauthamp10.buckwheatplus"
         minSdk = 29
         targetSdk = 36
         versionCode = 29
-        versionName = "4.8.0"
+        versionName = "4.8.0-plus.1"
         testInstrumentationRunner = "com.danilkinkin.buckwheat.CustomTestRunner"
     }
 
@@ -30,6 +31,7 @@ android {
 
         getByName("release") {
             isMinifyEnabled = true
+            isShrinkResources = true
             signingConfig = signingConfigs.getByName("debug")
 
             proguardFiles(
@@ -54,6 +56,13 @@ android {
     bundle {
         language {
             enableSplit = false
+        }
+    }
+
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+            all { it.maxHeapSize = "1g" }
         }
     }
 
@@ -85,10 +94,10 @@ dependencies {
     implementation("androidx.recyclerview:recyclerview:1.4.0")
     implementation("androidx.room:room-runtime:2.7.2")
     implementation("androidx.room:room-ktx:2.7.2")
-    implementation("androidx.room:room-paging:2.7.2")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.2")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.9.2")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.9.2")
     implementation("androidx.glance:glance-appwidget:1.1.1")
     implementation("androidx.glance:glance-appwidget-preview:1.1.1")
     implementation("androidx.glance:glance-preview:1.1.1")
@@ -97,7 +106,6 @@ dependencies {
     implementation("com.google.dagger:dagger:2.57")
     implementation("com.google.dagger:hilt-android:2.57")
     implementation("org.apache.commons:commons-csv:1.14.0")
-    implementation("io.coil-kt:coil-compose:2.7.0")
     ksp("androidx.room:room-compiler:2.7.2")
     ksp("androidx.hilt:hilt-compiler:1.2.0")
     ksp("com.google.dagger:dagger-compiler:2.57")
@@ -109,6 +117,11 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest:1.8.3")
 
     // Testing
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("org.robolectric:robolectric:4.14.1")
+    testImplementation("androidx.test:core:1.6.1")
+    testImplementation("com.google.dagger:hilt-android-testing:2.57")
+    kspTest("com.google.dagger:hilt-android-compiler:2.57")
     androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
     androidTestImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test:core:1.6.1")

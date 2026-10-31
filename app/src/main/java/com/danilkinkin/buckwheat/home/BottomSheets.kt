@@ -9,6 +9,8 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.danilkinkin.buckwheat.base.BottomSheetWrapper
+import com.danilkinkin.buckwheat.cards.CARD_SPENDS_SHEET
+import com.danilkinkin.buckwheat.cards.CardSpends
 import com.danilkinkin.buckwheat.data.AppViewModel
 import com.danilkinkin.buckwheat.data.PathState
 import com.danilkinkin.buckwheat.data.SpendsViewModel
@@ -107,6 +109,7 @@ fun BottomSheets(
         name = SETTINGS_SHEET,
     ) { state ->
         Settings(
+            activityResultRegistryOwner = activityResultRegistryOwner,
             onTriedWidget = {
                 coroutineScope.launch { state.callback(emptyMap()) }
             }
@@ -228,6 +231,20 @@ fun BottomSheets(
         name = SETTINGS_TRY_WIDGET_SHEET,
     ) { state ->
         TryWidgetDialog()
+    }
+
+    BottomSheetWrapper(name = CARD_SPENDS_SHEET) { state ->
+        CardSpends(
+            onClose = {
+                coroutineScope.launch { state.hide() }
+            }
+        )
+    }
+
+    BottomSheetWrapper(
+        name = SETTINGS_AUTO_IMPORT_SHEET,
+    ) {
+        AutoImportDialog(activityResultRegistryOwner = activityResultRegistryOwner)
     }
 
     BoxWithConstraints(Modifier.fillMaxSize()) {
